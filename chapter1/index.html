@@ -1,0 +1,780 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>网络设备之PHY · GitBook</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="section1.html" />
+    
+    
+    <link rel="prev" href="../" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    start
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.2" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    网络设备之PHY
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="section1.html">
+            
+                <a href="section1.html">
+            
+                    
+                    网络设备之MDIO总线
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="../end/">
+            
+                <a href="../end/">
+            
+                    
+                    over
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >网络设备之PHY</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="&#x4E00;&#x7ED3;&#x6784;&#x4F53;">&#x4E00;.&#x7ED3;&#x6784;&#x4F53;</h1>
+<ul>
+<li>PHY&#x8BBE;&#x5907;</li>
+</ul>
+<pre><code>struct phy_device {  
+    struct phy_driver *drv; //PHY&#x8BBE;&#x5907;&#x9A71;&#x52A8;  
+    struct mii_bus *bus;    //&#x5BF9;&#x5E94;&#x7684;MII&#x603B;&#x7EBF;  
+    struct device dev;  //&#x8BBE;&#x5907;&#x6587;&#x4EF6;  
+    u32 phy_id; //PHY ID  
+    enum phy_state state;   //PHY&#x72B6;&#x6001;  
+    u32 dev_flags;  
+    phy_interface_t interface;  //PHY&#x63A5;&#x53E3;  
+    int addr;   //PHY &#x603B;&#x7EBF;&#x5730;&#x5740;(0~31)  
+    int speed;  //&#x901F;&#x5EA6;  
+    int duplex; //&#x53CC;&#x5DE5;&#x6A21;&#x5F0F;  
+    int pause;  //&#x505C;&#x6B62;  
+    int asym_pause; //  
+    int link;     
+    u32 interrupts; //&#x4E2D;&#x65AD;&#x4F7F;&#x80FD;&#x6807;&#x5FD7;  
+    u32 supported;    
+    u32 advertising;  
+    int autoneg;  
+    int link_timeout;   //026  
+    int irq;    //&#x4E2D;&#x65AD;&#x53F7;  
+    void *priv; //&#x79C1;&#x6709;&#x6570;&#x636E;  
+    struct work_struct phy_queue;   //PHY&#x5DE5;&#x4F5C;&#x961F;&#x5217;  
+    struct delayed_work state_queue;    //PHY&#x5EF6;&#x65F6;&#x5DE5;&#x4F5C;&#x961F;&#x5217;  
+    atomic_t irq_disable;     
+    struct mutex lock;  
+    struct net_device *attached_dev;    //&#x7F51;&#x7EDC;&#x8BBE;&#x5907;  
+    void (*adjust_link)(struct net_device *dev);  
+    void (*adjust_state)(struct net_device *dev);  
+};
+</code></pre><ul>
+<li>PHY&#x9A71;&#x52A8;</li>
+</ul>
+<pre><code>struct phy_driver {  
+    u32 phy_id;     //PHY ID  
+    char *name;     //PHY&#x540D;  
+    unsigned int phy_id_mask;  
+    u32 features;   //&#x7279;&#x6027;  
+    u32 flags;  //&#x6807;&#x8BB0;  
+    int (*config_init)(struct phy_device *phydev);  //&#x914D;&#x7F6E;&#x521D;&#x59CB;&#x5316;  
+    int (*probe)(struct phy_device *phydev);    //&#x63A2;&#x6D4B;&#x5230; probe&#x65B9;&#x6CD5;  
+    int (*suspend)(struct phy_device *phydev);  //&#x5524;&#x9192;  
+    int (*resume)(struct phy_device *phydev);   //&#x6302;&#x8D77;  
+    int (*config_aneg)(struct phy_device *phydev);  //&#x652F;&#x63F4;(Auto-negotiation)&#x914D;&#x7F6E;  
+    int (*read_status)(struct phy_device *phydev);  //&#x8BFB;&#x652F;&#x63F4;(Auto-negotiation)&#x72B6;&#x6001;  
+    int (*ack_interrupt)(struct phy_device *phydev);    //&#x6E05;&#x4E2D;&#x65AD;  
+    int (*config_intr)(struct phy_device *phydev);  //&#x4F7F;&#x80FD;/&#x7981;&#x7528; &#x4E2D;&#x65AD;  
+    int (*did_interrupt)(struct phy_device *phydev);    //&#x5224;&#x65AD;&#x662F;&#x5426;&#x7531;&#x4E2D;&#x65AD;  
+    void (*remove)(struct phy_device *phydev);  //&#x79FB;&#x9664;  
+    int  (*hwtstamp)(struct phy_device *phydev, struct ifreq *ifr); //&#x65F6;&#x95F4;&#x6233;&#x5904;&#x7406;  
+    bool (*rxtstamp)(struct phy_device *dev, struct sk_buff *skb, int type);    //&#x63A5;&#x6536;&#x65F6;&#x95F4;&#x6233;  
+    void (*txtstamp)(struct phy_device *dev, struct sk_buff *skb, int type);    //&#x53D1;&#x9001;&#x65F6;&#x95F4;&#x6233;  
+    struct device_driver driver;    //&#x8BBE;&#x5907;&#x9A71;&#x52A8;&#x6587;&#x4EF6;  
+};
+</code></pre><h1 id="&#x4E8C;&#x8BBE;&#x5907;&#x4E0E;&#x9A71;&#x52A8;&#x7684;&#x6CE8;&#x518C;&#x51FD;&#x6570;">&#x4E8C;.&#x8BBE;&#x5907;&#x4E0E;&#x9A71;&#x52A8;&#x7684;&#x6CE8;&#x518C;&#x51FD;&#x6570;</h1>
+<ul>
+<li>&#x6CE8;&#x518C;PHY&#x8BBE;&#x5907;</li>
+</ul>
+<pre><code>int phy_device_register(struct phy_device *phydev)  
+{  
+    int err;  
+    if (phydev-&gt;bus-&gt;phy_map[phydev-&gt;addr])    //&#x5224;&#x65AD;PHY&#x662F;&#x5426;&#x5DF2;&#x7ECF;&#x7ED9;&#x6CE8;&#x518C;&#x4E86;  
+        return -EINVAL;  
+    phydev-&gt;bus-&gt;phy_map[phydev-&gt;addr] = phydev;   //&#x6DFB;&#x52A0;PHY&#x5230;&#x603B;&#x7EBF;&#x7684;phy_map&#x91CC;  
+    phy_scan_fixups(phydev);    //&#x6267;&#x884C;&#x5339;&#x914D;&#x7684;fixups  
+    err = device_register(&amp;phydev-&gt;dev); //&#x6CE8;&#x518C;&#x8BBE;&#x5907;  
+    if (err) {  
+        pr_err(&quot;phy %d failed to register\n&quot;, phydev-&gt;addr);  
+        goto out;  
+    }  
+    return 0;  
+ out:  
+    phydev-&gt;bus-&gt;phy_map[phydev-&gt;addr] = NULL;  
+    return err;  
+}  
+EXPORT_SYMBOL(phy_device_register);
+</code></pre><h6 id="phy&#x7684;&#x8BBE;&#x5907;&#x4E00;&#x822C;&#x662F;&#x52A8;&#x6001;&#x6CE8;&#x518C;&#x7684;&#x5728;&#x6CE8;&#x518C;&#x4E4B;&#x524D;&#x4E00;&#x822C;&#x4F1A;&#x8C03;&#x7528;getphydevice&#x51FD;&#x6570;">PHY&#x7684;&#x8BBE;&#x5907;&#x4E00;&#x822C;&#x662F;&#x52A8;&#x6001;&#x6CE8;&#x518C;&#x7684;&#x5728;&#x6CE8;&#x518C;&#x4E4B;&#x524D;&#x4E00;&#x822C;&#x4F1A;&#x8C03;&#x7528;get_phy_device&#x51FD;&#x6570;</h6>
+<pre><code>struct phy_device * get_phy_device(struct mii_bus *bus, int addr)  
+{  
+    struct phy_device *dev = NULL;  
+    u32 phy_id;  
+    int r;  
+    r = get_phy_id(bus, addr, &amp;phy_id); //&#x83B7;&#x53D6;PHY ID  
+    if (r)  
+        return ERR_PTR(r);  
+    if ((phy_id &amp; 0x1fffffff) == 0x1fffffff)  
+        return NULL;  
+    dev = phy_device_create(bus, addr, phy_id); //&#x521B;&#x5EFA;PHY&#x8BBE;&#x5907;  
+    return dev;  
+}  
+EXPORT_SYMBOL(get_phy_device);
+</code></pre><ul>
+<li>&#x83B7;&#x53D6;PHY ID</li>
+</ul>
+<pre><code>int get_phy_id(struct mii_bus *bus, int addr, u32 *phy_id)  
+{  
+    int phy_reg;  
+    //&#x8C03;&#x7528;PHY&#x7684;&#x603B;&#x7EBF;&#x4E5F;&#x5C31;&#x662F;mii&#x603B;&#x7EBF;&#x7684;&#x8BFB;&#x65B9;&#x6CD5;&#x83B7;&#x53D6;PHY ID  
+    phy_reg = bus-&gt;read(bus, addr, MII_PHYSID1); //&#x83B7;&#x53D6;PHYS ID1&#x547D;&#x4EE4;  
+    if (phy_reg &lt; 0)  
+        return -EIO;  
+    *phy_id = (phy_reg &amp; 0xffff) &lt;&lt; 16;  
+    phy_reg = bus-&gt;read(bus, addr, MII_PHYSID2); //&#x83B7;&#x53D6;PHYS ID1&#x547D;&#x4EE4;  
+    if (phy_reg &lt; 0)  
+        return -EIO;  
+    *phy_id |= (phy_reg &amp; 0xffff);  
+    return 0;  
+}  
+EXPORT_SYMBOL(get_phy_id);
+</code></pre><ul>
+<li>&#x521B;&#x5EFA;PHY&#x8BBE;&#x5907;</li>
+</ul>
+<pre><code>static struct phy_device* phy_device_create(struct mii_bus *bus,int addr, int phy_id)  
+{  
+    struct phy_device *dev;  
+    dev = kzalloc(sizeof(*dev), GFP_KERNEL);    //&#x5206;&#x914D;phy&#x8BBE;&#x5907;&#x5185;&#x5B58;  
+    if (NULL == dev)  
+        return (struct phy_device*) PTR_ERR((void*)-ENOMEM);  
+    dev-&gt;dev.release = phy_device_release;  
+    dev-&gt;speed = 0;  //&#x901F;&#x5EA6;  
+    dev-&gt;duplex = -1;    //&#x53CC;&#x5DE5;&#x6A21;&#x5F0F;  
+    dev-&gt;pause = dev-&gt;asym_pause = 0;  
+    dev-&gt;link = 1;     
+    dev-&gt;interface = PHY_INTERFACE_MODE_GMII;    //&#x63A5;&#x53E3;&#x6A21;&#x5F0F;GMII  
+    dev-&gt;autoneg = AUTONEG_ENABLE;   //&#x81EA;&#x52A8;&#x4F7F;&#x80FD;  
+    dev-&gt;addr = addr; //&#x5730;&#x5740;  
+    dev-&gt;phy_id = phy_id; //PHY ID  
+    dev-&gt;bus = bus;  //mii&#x603B;&#x7EBF;  
+    dev-&gt;dev.parent = bus-&gt;parent;    //&#x7236;&#x8BBE;&#x5907;  
+    dev-&gt;dev.bus = &amp;mdio_bus_type;   //&#x603B;&#x7EBF;&#x7C7B;&#x578B;  
+    dev-&gt;irq = bus-&gt;irq != NULL ? bus-&gt;irq[addr] : PHY_POLL;   //&#x4E2D;&#x65AD;/&#x8F6E;&#x8BE2;  
+    dev_set_name(&amp;dev-&gt;dev, PHY_ID_FMT, bus-&gt;id, addr);   //PHY &#x8BBE;&#x5907;&#x6587;&#x4EF6;&#x540D;  
+    dev-&gt;state = PHY_DOWN;   //&#x72B6;&#x6001;DOWN  
+    mutex_init(&amp;dev-&gt;lock);  
+    INIT_DELAYED_WORK(&amp;dev-&gt;state_queue, phy_state_machine);    //&#x521D;&#x59CB;&#x5316;PHY&#x72B6;&#x6001;&#x673A;  
+    request_module(MDIO_MODULE_PREFIX MDIO_ID_FMT, MDIO_ID_ARGS(phy_id));  
+    return dev;  
+}
+</code></pre><ul>
+<li>&#x6CE8;&#x518C;PHY&#x9A71;&#x52A8;</li>
+</ul>
+<pre><code>int phy_driver_register(struct phy_driver *new_driver)  
+{  
+    int retval;  
+    new_driver-&gt;driver.name = new_driver-&gt;name;   //&#x9A71;&#x52A8;&#x540D;  
+    new_driver-&gt;driver.bus = &amp;mdio_bus_type; //&#x603B;&#x7EBF;&#x7C7B;&#x578B;  
+    new_driver-&gt;driver.probe = phy_probe;    //&#x63A2;&#x6D4B;&#x51FD;&#x6570;  
+    new_driver-&gt;driver.remove = phy_remove;  //&#x79FB;&#x9664;&#x51FD;&#x6570;  
+    retval = driver_register(&amp;new_driver-&gt;driver);   //&#x6CE8;&#x518C;&#x8BBE;&#x5907;&#x9A71;&#x52A8;  
+    if (retval) {  
+        printk(KERN_ERR &quot;%s: Error %d in registering driver\n&quot;,new_driver-&gt;name, retval);  
+        return retval;  
+    }  
+    pr_debug(&quot;%s: Registered new driver\n&quot;, new_driver-&gt;name);  
+    return 0;  
+}  
+EXPORT_SYMBOL(phy_driver_register);
+</code></pre><p>3.&#x5339;&#x914D;</p>
+<h6 id="phy&#x8BBE;&#x5907;&#x548C;phy&#x9A71;&#x52A8;&#x7684;&#x603B;&#x7EBF;&#x7C7B;&#x578B;&#x90FD;&#x662F;mdiobustype">PHY&#x8BBE;&#x5907;&#x548C;PHY&#x9A71;&#x52A8;&#x7684;&#x603B;&#x7EBF;&#x7C7B;&#x578B;&#x90FD;&#x662F;mdio_bus_type</h6>
+<pre><code>struct bus_type mdio_bus_type = {  
+    .name       = &quot;mdio_bus&quot;,  
+    .match      = mdio_bus_match,   //&#x5339;&#x914D;&#x65B9;&#x6CD5;  
+    .pm     = MDIO_BUS_PM_OPS,  
+};  
+EXPORT_SYMBOL(mdio_bus_type);
+</code></pre><h5 id="&#x5339;&#x914D;&#x51FD;&#x6570;mdiobusmatch">&#x5339;&#x914D;&#x51FD;&#x6570;mdio_bus_match</h5>
+<pre><code>static int mdio_bus_match(struct device *dev, struct device_driver *drv)  
+{  
+    struct phy_device *phydev = to_phy_device(dev); //&#x83B7;&#x53D6;PHY&#x8BBE;&#x5907;  
+    struct phy_driver *phydrv = to_phy_driver(drv); //&#x83B7;&#x53D6;PHY&#x9A71;&#x52A8;  
+    return ((phydrv-&gt;phy_id &amp; phydrv-&gt;phy_id_mask) ==(phydev-&gt;phy_id &amp; phydrv-&gt;phy_id_mask));   //&#x6BD4;&#x8F83;phy_id  
+}
+</code></pre><h5 id="&#x5339;&#x914D;&#x6210;&#x529F;&#x5C31;&#x4F1A;&#x8C03;&#x7528;phy&#x9A71;&#x52A8;&#x7684;probe&#x65B9;&#x6CD5;&#x4E5F;&#x5373;&#x662F;phyprobe">&#x5339;&#x914D;&#x6210;&#x529F;&#x5C31;&#x4F1A;&#x8C03;&#x7528;phy&#x9A71;&#x52A8;&#x7684;probe&#x65B9;&#x6CD5;,&#x4E5F;&#x5373;&#x662F;phy_probe</h5>
+<pre><code>static int phy_probe(struct device *dev)  
+{  
+    struct phy_device *phydev;  
+    struct phy_driver *phydrv;  
+    struct device_driver *drv;  
+    int err = 0;  
+    phydev = to_phy_device(dev);    //&#x83B7;&#x53D6;PHY&#x8BBE;&#x5907;  
+    drv = get_driver(phydev-&gt;dev.driver);  
+    phydrv = to_phy_driver(drv);    //&#x83B7;&#x53D6;PHY&#x9A71;&#x52A8;  
+    phydev-&gt;drv = phydrv;    //&#x6346;&#x7ED1;&#x4E00;&#x4E0B;  
+    if (!(phydrv-&gt;flags &amp; PHY_HAS_INTERRUPT))    //&#x8BBE;&#x7F6E;&#x4E2D;&#x65AD;&#x65B9;&#x5F0F;  
+        phydev-&gt;irq = PHY_POLL;  
+    mutex_lock(&amp;phydev-&gt;lock);  
+    phydev-&gt;supported = phydrv-&gt;features; //&#x8BBE;&#x7F6E;PHY&#x8BBE;&#x5907;&#x7279;&#x6027;  
+    phydev-&gt;advertising = phydrv-&gt;features;   //&#x8BBE;&#x7F6E;PHY&#x8BBE;&#x5907;&#x7279;&#x6027;  
+    phydev-&gt;state = PHY_READY;   //&#x72B6;&#x6001;&#x8BBE;&#x7F6E;&#x4E3A;&quot;&#x51C6;&#x5907;&#x597D;&quot;  
+    if (phydev-&gt;drv-&gt;probe)   //&#x5982;&#x679C;&#x9A71;&#x52A8;&#x6709;probe&#x65B9;&#x6CD5;  
+        err = phydev-&gt;drv-&gt;probe(phydev); //&#x5219;&#x8C03;&#x7528;  
+    mutex_unlock(&amp;phydev-&gt;lock);  
+    return err;  
+}
+</code></pre><h1 id="&#x4E09;&#x521D;&#x59CB;&#x5316;&#x8FC7;&#x7A0B;">&#x4E09;.&#x521D;&#x59CB;&#x5316;&#x8FC7;&#x7A0B;</h1>
+<p>[plain] view plaincopy
+static int __init phy_init(void)<br>{<br>    int rc;<br>    rc = mdio_bus_init();   //&#x521D;&#x59CB;&#x5316;mdio&#x603B;&#x7EBF;<br>    if (rc)<br>        return rc;<br>    rc = phy_driver_register(&amp;genphy_driver);   //&#x6CE8;&#x518C;&#x901A;&#x7528;&#x7684;PHY&#x8BBE;&#x5907;&#x9A71;&#x52A8;<br>    if (rc)<br>        mdio_bus_exit();<br>    return rc;<br>}  </p>
+<h5 id="&#x521D;&#x59CB;&#x5316;&#x8FC7;&#x7A0B;&#x4E3B;&#x8981;&#x662F;&#x521D;&#x59CB;&#x5316;mdio&#x603B;&#x7EBF;">&#x521D;&#x59CB;&#x5316;&#x8FC7;&#x7A0B;&#x4E3B;&#x8981;&#x662F;&#x521D;&#x59CB;&#x5316;mdio&#x603B;&#x7EBF;</h5>
+<h6 id="&#x63A5;&#x7740;&#x6CE8;&#x518C;&#x901A;&#x7528;&#x7684;phy&#x8BBE;&#x5907;&#x9A71;&#x52A8;">&#x63A5;&#x7740;&#x6CE8;&#x518C;&#x901A;&#x7528;&#x7684;PHY&#x8BBE;&#x5907;&#x9A71;&#x52A8;</h6>
+<pre><code>static struct phy_driver genphy_driver = {  
+    .phy_id = 0xffffffff,  
+    .phy_id_mask = 0xffffffff,  
+    .name   = &quot;Generic PHY&quot;,  
+    .config_init = genphy_config_init, //&#x521D;&#x59CB;&#x5316;&#x51FD;&#x6570;  
+    .features   = 0,  
+    .config_aneg = genphy_config_aneg, //&#x914D;&#x7F6E; &#x652F;&#x63F4;(Auto-negotiation)  
+    .read_status = genphy_read_status, //&#x8BFB;&#x72B6;&#x6001;  
+    .suspend    = genphy_suspend,  
+    .resume = genphy_resume,  
+    .driver = {.owner= THIS_MODULE, },  
+};
+</code></pre><h6 id="&#x521D;&#x59CB;&#x5316;&#x914D;&#x7F6E;&#x65B9;&#x6CD5;">&#x521D;&#x59CB;&#x5316;&#x914D;&#x7F6E;&#x65B9;&#x6CD5;</h6>
+<pre><code>static int genphy_config_init(struct phy_device *phydev)  
+{  
+    int val;  
+    u32 features;  
+    //&#x9ED8;&#x8BA4;&#x652F;&#x6301;&#x7279;&#x6027;  
+    features = (SUPPORTED_TP | SUPPORTED_MII| SUPPORTED_AUI | SUPPORTED_FIBRE |SUPPORTED_BNC);  
+    val = phy_read(phydev, MII_BMSR);   //&#x8BFB;&#x57FA;&#x7840;&#x72B6;&#x6001;  
+    if (val &lt; 0)  
+        return val;  
+    if (val &amp; BMSR_ANEGCAPABLE) //&#x652F;&#x6301;(auto-negotiation)  
+        features |= SUPPORTED_Autoneg;  
+    if (val &amp; BMSR_100FULL) //100&#x5146;&#x5168;&#x53CC;&#x5DE5;  
+        features |= SUPPORTED_100baseT_Full;  
+    if (val &amp; BMSR_100HALF) //100&#x5146;&#x534A;&#x53CC;&#x5DE5;  
+        features |= SUPPORTED_100baseT_Half;  
+    if (val &amp; BMSR_10FULL)  //10&#x5146;&#x5168;&#x53CC;&#x5DE5;  
+        features |= SUPPORTED_10baseT_Full;  
+    if (val &amp; BMSR_10HALF)  //10&#x5146;&#x534A;&#x53CC;&#x5DE5;  
+        features |= SUPPORTED_10baseT_Half;  
+    if (val &amp; BMSR_ESTATEN) {  
+        val = phy_read(phydev, MII_ESTATUS);    //&#x8BFB;&#x6269;&#x5C55;&#x72B6;&#x6001;  
+        if (val &lt; 0)  
+            return val;  
+        if (val &amp; ESTATUS_1000_TFULL)   //1000&#x5146;&#x5168;&#x53CC;&#x5DE5;  
+            features |= SUPPORTED_1000baseT_Full;  
+        if (val &amp; ESTATUS_1000_THALF)   //1000&#x5146;&#x534A;&#x53CC;&#x5DE5;  
+            features |= SUPPORTED_1000baseT_Half;  
+    }  
+    phydev-&gt;supported = features;    //PHY&#x7279;&#x6027;  
+    phydev-&gt;advertising = features;  
+    return 0;  
+}
+</code></pre><h1 id="&#x56DB;phy&#x72B6;&#x6001;&#x673A;">&#x56DB;.PHY&#x72B6;&#x6001;&#x673A;</h1>
+<ul>
+<li>&#x72B6;&#x6001;&#x5206;&#x7C7B;</li>
+</ul>
+<pre><code>enum phy_state {  
+    PHY_DOWN=0,  
+    PHY_STARTING,   //&#x5F00;&#x59CB;  
+    PHY_READY,  //&#x51C6;&#x5907;&#x597D;  
+    PHY_PENDING,    //&#x6302;&#x8D77;  
+    PHY_UP,     //&#x5F00;&#x542F;  
+    PHY_AN,     //&#x5224;&#x65AD;&#x8FDE;&#x63A5;&#x72B6;&#x6001;&#x4E2D; negotiating  
+    PHY_RUNNING,    //&#x8FD0;&#x884C;  
+    PHY_NOLINK, //&#x5F00;&#x542F; &#x672A;&#x8FDE;&#x63A5;  
+    PHY_FORCING,    //&#x8BBE;&#x7F6E;&#x4E2D;  
+    PHY_CHANGELINK, //&#x8FDE;&#x63A5;&#x72B6;&#x6001;&#x6539;&#x53D8;  
+    PHY_HALTED, //&#x505C;&#x6B62;  
+    PHY_RESUMING    //&#x5524;&#x9192;  
+};
+</code></pre><ul>
+<li>&#x72B6;&#x6001;&#x673A;phy_state_machine</li>
+</ul>
+<h5 id="&#x5728;phydevicecreate&#x51FD;&#x6570;&#x4E2D;&#x5F00;&#x542F;&#x4E86;&#x72B6;&#x6001;&#x673A;">&#x5728;phy_device_create&#x51FD;&#x6570;&#x4E2D;,&#x5F00;&#x542F;&#x4E86;&#x72B6;&#x6001;&#x673A;</h5>
+<pre><code>void phy_state_machine(struct work_struct *work)  
+{  
+    struct delayed_work *dwork = to_delayed_work(work);  
+    struct phy_device *phydev = container_of(dwork, struct phy_device, state_queue);  
+    int needs_aneg = 0;  
+    int err = 0;  
+    mutex_lock(&amp;phydev-&gt;lock);  
+    if (phydev-&gt;adjust_state)  
+        phydev-&gt;adjust_state(phydev-&gt;attached_dev);  
+    switch(phydev-&gt;state) {  
+        case PHY_DOWN:      //&#x5173;&#x95ED;((ifconfig eth0 down)  
+        case PHY_STARTING:  //&#x5F00;&#x59CB;  
+        case PHY_READY:     //&#x51C6;&#x5907;&#x597D;  
+        case PHY_PENDING:   //&#x6302;&#x8D77;  
+            break;  
+        case PHY_UP:    //&#x5F00;&#x542F;(ifconfig eth0 up)  
+            needs_aneg = 1;  
+            phydev-&gt;link_timeout = PHY_AN_TIMEOUT;  
+            break;  
+        case PHY_AN:    //&#x5224;&#x65AD;&#x8FDE;&#x63A5;&#x72B6;&#x6001;&#x4E2D; negotiating  
+            err = phy_read_status(phydev);  
+            if (err &lt; 0)  
+                break;  
+            if (!phydev-&gt;link) {  
+                phydev-&gt;state = PHY_NOLINK;  
+                netif_carrier_off(phydev-&gt;attached_dev);  
+                phydev-&gt;adjust_link(phydev-&gt;attached_dev);  
+                break;  
+            }  
+            err = phy_aneg_done(phydev);  
+            if (err &lt; 0)  
+                break;  
+            if (err &gt; 0) {  
+                phydev-&gt;state = PHY_RUNNING;  
+                netif_carrier_on(phydev-&gt;attached_dev);  
+                phydev-&gt;adjust_link(phydev-&gt;attached_dev);  
+
+            }   
+            else if (0 == phydev-&gt;link_timeout--) {  
+                int idx;  
+                needs_aneg = 1;  
+                if (phydev-&gt;drv-&gt;flags &amp; PHY_HAS_MAGICANEG)  
+                    break;  
+                idx = phy_find_valid(0, phydev-&gt;supported);  
+                phydev-&gt;speed = settings[idx].speed;  
+                phydev-&gt;duplex = settings[idx].duplex;  
+                phydev-&gt;autoneg = AUTONEG_DISABLE;  
+                pr_info(&quot;Trying %d/%s\n&quot;, phydev-&gt;speed,DUPLEX_FULL ==phydev-&gt;duplex ?&quot;FULL&quot; : &quot;HALF&quot;);  
+            }  
+            break;  
+        case PHY_NOLINK:    //&#x5F00;&#x542F; &#x672A;&#x8FDE;&#x63A5;  
+            err = phy_read_status(phydev);  
+            if (err)  
+                break;  
+            if (phydev-&gt;link) {  
+                phydev-&gt;state = PHY_RUNNING;  
+                netif_carrier_on(phydev-&gt;attached_dev);  
+                phydev-&gt;adjust_link(phydev-&gt;attached_dev);  
+            }  
+            break;  
+        case PHY_FORCING:   //&#x8BBE;&#x7F6E;&#x4E2D;  
+            err = genphy_update_link(phydev);  
+            if (err)  
+                break;  
+            if (phydev-&gt;link) {  
+                phydev-&gt;state = PHY_RUNNING;  
+                netif_carrier_on(phydev-&gt;attached_dev);  
+            }   
+            else {  
+                if (0 == phydev-&gt;link_timeout--) {  
+                    phy_force_reduction(phydev);  
+                    needs_aneg = 1;  
+                }  
+            }  
+            phydev-&gt;adjust_link(phydev-&gt;attached_dev);  
+            break;  
+        case PHY_RUNNING:   //&#x8FD0;&#x884C;  
+            if (PHY_POLL == phydev-&gt;irq)  
+                phydev-&gt;state = PHY_CHANGELINK;  
+            break;  
+        case PHY_CHANGELINK:    //&#x8FDE;&#x63A5;&#x72B6;&#x6001;&#x6539;&#x53D8;  
+            err = phy_read_status(phydev);  
+            if (err)  
+                break;  
+            if (phydev-&gt;link) {  
+                phydev-&gt;state = PHY_RUNNING;  
+                netif_carrier_on(phydev-&gt;attached_dev);  
+            }   
+            else {  
+                phydev-&gt;state = PHY_NOLINK;  
+                netif_carrier_off(phydev-&gt;attached_dev);  
+            }  
+            phydev-&gt;adjust_link(phydev-&gt;attached_dev);  
+            if (PHY_POLL != phydev-&gt;irq)  
+                err = phy_config_interrupt(phydev,PHY_INTERRUPT_ENABLED);  
+            break;  
+        case PHY_HALTED:    //&#x505C;&#x6B62;  
+            if (phydev-&gt;link) {  
+                phydev-&gt;link = 0;  
+                netif_carrier_off(phydev-&gt;attached_dev);  
+                phydev-&gt;adjust_link(phydev-&gt;attached_dev);  
+            }  
+            break;  
+        case PHY_RESUMING:  //&#x5524;&#x9192;  
+            err = phy_clear_interrupt(phydev);  
+            if (err)  
+                break;  
+            err = phy_config_interrupt(phydev,PHY_INTERRUPT_ENABLED);  
+            if (err)  
+                break;  
+            if (AUTONEG_ENABLE == phydev-&gt;autoneg) {  
+                err = phy_aneg_done(phydev);  
+                if (err &lt; 0)  
+                    break;  
+                if (err &gt; 0) {  
+                    err = phy_read_status(phydev);  
+                    if (err)  
+                        break;  
+                    if (phydev-&gt;link) {  
+                        phydev-&gt;state = PHY_RUNNING;  
+                        netif_carrier_on(phydev-&gt;attached_dev);  
+                    }   
+                    else  
+                        phydev-&gt;state = PHY_NOLINK;  
+                    phydev-&gt;adjust_link(phydev-&gt;attached_dev);  
+                }   
+                else {  
+                    phydev-&gt;state = PHY_AN;  
+                    phydev-&gt;link_timeout = PHY_AN_TIMEOUT;  
+                }  
+            }  
+            else {  
+                err = phy_read_status(phydev);  
+                if (err)  
+                    break;  
+                if (phydev-&gt;link) {  
+                    phydev-&gt;state = PHY_RUNNING;  
+                    netif_carrier_on(phydev-&gt;attached_dev);  
+                }   
+                else  
+                    phydev-&gt;state = PHY_NOLINK;  
+                phydev-&gt;adjust_link(phydev-&gt;attached_dev);  
+            }  
+            break;  
+    }  
+    mutex_unlock(&amp;phydev-&gt;lock);  
+    if (needs_aneg) //&#x9700;&#x8981;&#x81EA;&#x52A8;&#x914D;&#x7F6E;(&#x4F8B;&#x5982;ifconfig eth0 up&#x5C31;&#x4F1A;&#x8C03;&#x7528;)  
+        err = phy_start_aneg(phydev);   //&#x5F00;&#x59CB;&#x81EA;&#x52A8;&#x914D;&#x7F6E;  
+    if (err &lt; 0)  
+        phy_error(phydev);  
+    schedule_delayed_work(&amp;phydev-&gt;state_queue, PHY_STATE_TIME * HZ);  
+}
+</code></pre><ul>
+<li>&#x8FD0;&#x884C;ifconfig eth0 up&#x547D;&#x4EE4;&#x7684;&#x8FC7;&#x7A0B;</li>
+</ul>
+<h5 id="&#x8FDB;&#x5165;&#x5206;&#x652F;&#x72B6;&#x6001;&#x673A;&#x5206;&#x652F;">&#x8FDB;&#x5165;&#x5206;&#x652F;&#x72B6;&#x6001;&#x673A;&#x5206;&#x652F;</h5>
+<pre><code>case PHY_UP:    //&#x5F00;&#x542F;(ifconfig eth0 up)  
+            needs_aneg = 1;  
+            phydev-&gt;link_timeout = PHY_AN_TIMEOUT;  
+            break;
+</code></pre><ul>
+<li>&#x76F8;&#x5E94;&#x5904;&#x7406;</li>
+</ul>
+<pre><code>if (needs_aneg) //&#x9700;&#x8981;&#x81EA;&#x52A8;&#x534F;&#x5546;&#x673A;&#x5236;(&#x4F8B;&#x5982;ifconfig eth0 up&#x5C31;&#x4F1A;&#x8C03;&#x7528;)  
+        err = phy_start_aneg(phydev);   //&#x5F00;&#x59CB;&#x81EA;&#x52A8;&#x914D;&#x7F6E;
+</code></pre><h5 id="&#x8C03;&#x7528;phystartaneg&#x51FD;&#x6570;">&#x8C03;&#x7528;phy_start_aneg&#x51FD;&#x6570;</h5>
+<pre><code>int phy_start_aneg(struct phy_device *phydev)  
+{  
+    int err;  
+    mutex_lock(&amp;phydev-&gt;lock);  
+    if (AUTONEG_DISABLE == phydev-&gt;autoneg)  
+        phy_sanitize_settings(phydev);  
+    err = phydev-&gt;drv-&gt;config_aneg(phydev);   //&#x8C03;&#x7528;&#x9A71;&#x52A8;&#x7684;config_aneg&#x65B9;&#x6CD5;,&#x9ED8;&#x8BA4;&#x662F;genphy_config_aneg  
+    if (err &lt; 0)  
+        goto out_unlock;  
+    if (phydev-&gt;state != PHY_HALTED) {   //&#x8C03;&#x6574;&#x4FEE;&#x6539;PHY&#x8BBE;&#x5907;&#x72B6;&#x6001;  
+        if (AUTONEG_ENABLE == phydev-&gt;autoneg) {  
+            phydev-&gt;state = PHY_AN;  
+            phydev-&gt;link_timeout = PHY_AN_TIMEOUT;  
+        }   
+        else {  
+            phydev-&gt;state = PHY_FORCING;  
+            phydev-&gt;link_timeout = PHY_FORCE_TIMEOUT;  
+        }  
+    }  
+out_unlock:  
+    mutex_unlock(&amp;phydev-&gt;lock);  
+    return err;  
+}  
+EXPORT_SYMBOL(phy_start_aneg);
+</code></pre><h5 id="&#x8C03;&#x7528;&#x9ED8;&#x8BA4;&#x7684;&#x81EA;&#x52A8;&#x534F;&#x5546;&#x65B9;&#x6CD5;genphyconfiganeg">&#x8C03;&#x7528;&#x9ED8;&#x8BA4;&#x7684;&#x81EA;&#x52A8;&#x534F;&#x5546;&#x65B9;&#x6CD5;genphy_config_aneg</h5>
+<pre><code>int genphy_config_aneg(struct phy_device *phydev)  
+{  
+    int result;  
+    if (AUTONEG_ENABLE != phydev-&gt;autoneg)  
+        return genphy_setup_forced(phydev);  
+    result = genphy_config_advert(phydev);  
+    if (result &lt; 0) /* error */  
+        return result;  
+    if (result == 0) {  
+        int ctl = phy_read(phydev, MII_BMCR);   //&#x83B7;&#x53D6;&#x72B6;&#x6001;  
+        if (ctl &lt; 0)  
+            return ctl;  
+        if (!(ctl &amp; BMCR_ANENABLE) || (ctl &amp; BMCR_ISOLATE))  
+            result = 1; /* do restart aneg */  
+    }  
+    if (result &gt; 0)  
+        result = genphy_restart_aneg(phydev);   //&#x91CD;&#x65B0;&#x5F00;&#x542F;&#x81EA;&#x52A8;&#x534F;&#x5546;&#x673A;&#x5236;  
+    return result;  
+}  
+EXPORT_SYMBOL(genphy_config_aneg);
+</code></pre><h5 id="&#x63A5;&#x7740;&#x8C03;&#x7528;genphyconfiganeg">&#x63A5;&#x7740;&#x8C03;&#x7528;genphy_config_aneg</h5>
+<pre><code>int genphy_restart_aneg(struct phy_device *phydev)  
+{  
+    int ctl;  
+    ctl = phy_read(phydev, MII_BMCR);   //&#x83B7;&#x53D6;&#x57FA;&#x672C;&#x72B6;&#x6001;  
+    if (ctl &lt; 0)  
+        return ctl;  
+    ctl |= (BMCR_ANENABLE | BMCR_ANRESTART);    //&#x4F7F;&#x80FD;&#x81EA;&#x52A8;&#x534F;&#x5546;&#x673A;&#x5236;&#x53CA;&#x652F;&#x63F4;&#x91CD;&#x542F;  
+    /* Don&apos;t isolate the PHY if we&apos;re negotiating */  
+    ctl &amp;= ~(BMCR_ISOLATE);  
+    ctl = phy_write(phydev, MII_BMCR, ctl); //&#x5199;&#x547D;&#x4EE4;  
+    return ctl;  
+}  
+EXPORT_SYMBOL(genphy_restart_aneg);
+</code></pre><h1 id="&#x4E94;&#x5176;&#x4ED6;&#x5E38;&#x7528;&#x7684;api">&#x4E94;.&#x5176;&#x4ED6;&#x5E38;&#x7528;&#x7684;api</h1>
+<pre><code>static inline int phy_read(struct phy_device *phydev, u32 regnum);  //PHY&#x8BFB;  
+static inline int phy_write(struct phy_device *phydev, u32 regnum, u16 val);    //PHY&#x5199;  
+void phy_start(struct phy_device *phydev);  //PHY&#x5F00;&#x59CB;  
+void phy_stop(struct phy_device *phydev);   //PHY&#x505C;&#x6B62;  
+int phy_init_hw(struct phy_device *phydev); //PHY&#x521D;&#x59CB;&#x5316;&#x786C;&#x4EF6;  
+struct phy_device * phy_attach(struct net_device *dev,const char *bus_id, u32 flags, phy_interface_t interface);    //PHY&#x63A5;&#x4E0A;  
+void phy_detach(struct phy_device *phydev); //PHY&#x5206;&#x79BB;  
+struct phy_device *phy_find_first(struct mii_bus *bus); //&#x67E5;&#x627E;mii_bus&#x603B;&#x7EBF;&#x4E0A;&#x7B2C;&#x4E00;&#x4E2A;PHY  
+int phy_connect_direct(struct net_device *dev, struct phy_device *phydev,void (*handler)(struct net_device *), u32 flags,phy_interface_t interface);    //PHY&#x76F4;&#x63A5;&#x8FDE;&#x63A5;&#x7F51;&#x7EDC;&#x8BBE;&#x5907;  
+struct phy_device * phy_connect(struct net_device *dev, const char *bus_id,void (*handler)(struct net_device *), u32 flags,phy_interface_t interface);  //PHY&#x8FDE;&#x63A5;&#x7F51;&#x7EDC;&#x8BBE;&#x5907;  
+void phy_disconnect(struct phy_device *phydev); //PHY&#x65AD;&#x5F00;&#x4E0E;&#x7F51;&#x7EDC;&#x8BBE;&#x5907;&#x7684;&#x8FDE;&#x63A5;  
+int phy_start_interrupts(struct phy_device *phydev);//PHY&#x5F00;&#x59CB;&#x4E2D;&#x65AD;  
+int phy_stop_interrupts(struct phy_device *phydev); //PHY&#x505C;&#x6B62;&#x4E2D;&#x65AD;  
+int phy_ethtool_sset(struct phy_device *phydev, struct ethtool_cmd *cmd);   //ethtool&#x5DE5;&#x5177;sset&#x529F;&#x80FD;  
+int phy_ethtool_gset(struct phy_device *phydev, struct ethtool_cmd *cmd);   //ethtool&#x5DE5;&#x5177;gset&#x529F;&#x80FD;  
+int phy_mii_ioctl(struct phy_device *phydev,struct ifreq *ifr, int cmd);    //&#x901A;&#x7528;PHY/mii&#x63A5;&#x53E3;  
+void phy_print_status(struct phy_device *phydev);   //PHY&#x6253;&#x5370;&#x72B6;&#x6001;
+</code></pre>
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="../" class="navigation navigation-prev " aria-label="Previous page: start">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="section1.html" class="navigation navigation-next " aria-label="Next page: 网络设备之MDIO总线">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"网络设备之PHY","level":"1.2","depth":1,"next":{"title":"网络设备之MDIO总线","level":"1.3","depth":1,"path":"chapter1/section1.md","ref":"chapter1/section1.md","articles":[]},"previous":{"title":"start","level":"1.1","depth":1,"path":"README.md","ref":"README.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"chapter1/README.md","mtime":"2020-04-03T10:23:32.185Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-04-03T10:33:29.384Z"},"basePath":"..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

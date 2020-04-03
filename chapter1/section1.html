@@ -1,0 +1,399 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>网络设备之MDIO总线 · GitBook</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="../end/" />
+    
+    
+    <link rel="prev" href="./" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    start
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    网络设备之PHY
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.3" data-path="section1.html">
+            
+                <a href="section1.html">
+            
+                    
+                    网络设备之MDIO总线
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="../end/">
+            
+                <a href="../end/">
+            
+                    
+                    over
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >网络设备之MDIO总线</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="&#x4E00;&#x7ED3;&#x6784;&#x4F53;">&#x4E00;.&#x7ED3;&#x6784;&#x4F53;</h1>
+<pre><code>struct mii_bus {  
+    const char *name;   //&#x603B;&#x7EBF;&#x540D;  
+    char id[MII_BUS_ID_SIZE];   //id  
+    void *priv; //&#x79C1;&#x6709;&#x6570;&#x636E;  
+    int (*read)(struct mii_bus *bus, int phy_id, int regnum);   //&#x8BFB;&#x65B9;&#x6CD5;  
+    int (*write)(struct mii_bus *bus, int phy_id, int regnum, u16 val); //&#x5199;&#x65B9;&#x6CD5;  
+    int (*reset)(struct mii_bus *bus);  //&#x590D;&#x4F4D;  
+    struct mutex mdio_lock;  
+    struct device *parent;  //&#x7236;&#x8BBE;&#x5907;  
+    enum {  
+        MDIOBUS_ALLOCATED = 1,  
+        MDIOBUS_REGISTERED,  
+        MDIOBUS_UNREGISTERED,  
+        MDIOBUS_RELEASED,  
+    } state;    //&#x603B;&#x7EBF;&#x72B6;&#x6001;  
+    struct device dev;  //&#x8BBE;&#x5907;&#x6587;&#x4EF6;  
+    struct phy_device *phy_map[PHY_MAX_ADDR];   //PHY&#x8BBE;&#x5907;&#x6570;&#x7EC4;  
+    u32 phy_mask;  
+    int *irq;   //&#x4E2D;&#x65AD;  
+};
+</code></pre><h1 id="&#x4E8C;&#x521D;&#x59CB;&#x5316;&#x8FC7;&#x7A0B;">&#x4E8C;.&#x521D;&#x59CB;&#x5316;&#x8FC7;&#x7A0B;</h1>
+<h5 id="&#x5728;phyinit&#x51FD;&#x6570;&#x4E2D;&#x8C03;&#x7528;&#x4E86;mdiobusinit&#x521D;&#x59CB;&#x5316;mdio&#x603B;&#x7EBF;">&#x5728;phy_init&#x51FD;&#x6570;&#x4E2D;&#x8C03;&#x7528;&#x4E86;mdio_bus_init&#x521D;&#x59CB;&#x5316;mdio&#x603B;&#x7EBF;</h5>
+<pre><code>int __init mdio_bus_init(void)  
+{  
+    int ret;  
+    ret = class_register(&amp;mdio_bus_class);  //&#x6CE8;&#x518C;&#x8BBE;&#x5907;&#x7C7B;  
+    if (!ret) {  
+        ret = bus_register(&amp;mdio_bus_type); //&#x6CE8;&#x518C;mdio&#x603B;&#x7EBF;  
+        if (ret)  
+            class_unregister(&amp;mdio_bus_class);  
+    }  
+    return ret;  
+}
+</code></pre><h5 id="&#x8BBE;&#x5907;&#x7C7B;sysclassmdiobus">&#x8BBE;&#x5907;&#x7C7B;&quot;/sys/class/mdio_bus&quot;</h5>
+<pre><code>static struct class mdio_bus_class = {  
+    .name       = &quot;mdio_bus&quot;,  
+    .dev_release    = mdiobus_release,  
+};
+</code></pre><h5 id="&#x603B;&#x7EBF;&#x7C7B;&#x578B;sysbusmdio">&#x603B;&#x7EBF;&#x7C7B;&#x578B;&quot;/sys/bus/mdio&quot;</h5>
+<pre><code>struct bus_type mdio_bus_type = {  
+    .name       = &quot;mdio_bus&quot;,  
+    .match      = mdio_bus_match,   //&#x5339;&#x914D;&#x65B9;&#x6CD5;  
+    .pm     = MDIO_BUS_PM_OPS,  
+};  
+EXPORT_SYMBOL(mdio_bus_type);
+</code></pre><h1 id="&#x4E09;mdio&#x603B;&#x7EBF;&#x6CE8;&#x518C;">&#x4E09;.mdio&#x603B;&#x7EBF;&#x6CE8;&#x518C;</h1>
+<ul>
+<li>&#x8C03;&#x7528;mdiobus_alloc&#x51FD;&#x6570;&#x5206;&#x914D;&#x5185;&#x5B58;</li>
+</ul>
+<pre><code>struct mii_bus *mdiobus_alloc(void)  
+{  
+    struct mii_bus *bus;  
+    bus = kzalloc(sizeof(*bus), GFP_KERNEL);    //&#x5206;&#x914D;&#x5185;&#x5B58;  
+    if (bus != NULL)  
+        bus-&gt;state = MDIOBUS_ALLOCATED;  
+    return bus;  
+}  
+EXPORT_SYMBOL(mdiobus_alloc);
+</code></pre><ul>
+<li>&#x586B;&#x5145;mii_bus&#x7684;&#x7ED3;&#x6784;&#x4F53;&#x6210;&#x5458;</li>
+</ul>
+<pre><code>mii_bus-&gt;name    = ;  
+mii_bus-&gt;read    = ;  
+mii_bus-&gt;write   = ;  
+mii_bus-&gt;reset   = ;  
+mii_bus-&gt;parent  = ;  
+mii_bus-&gt;priv    = ;  
+mii_bus-&gt;id  = ;
+</code></pre><ul>
+<li>&#x6CE8;&#x518C;mii_bus</li>
+</ul>
+<pre><code>int mdiobus_register(struct mii_bus *bus)  
+{  
+    int i, err;  
+    if (NULL == bus || NULL == bus-&gt;name || NULL == bus-&gt;read ||NULL == bus-&gt;write)  
+        return -EINVAL;  
+    BUG_ON(bus-&gt;state != MDIOBUS_ALLOCATED &amp;&amp;bus-&gt;state != MDIOBUS_UNREGISTERED);  
+    bus-&gt;dev.parent = bus-&gt;parent;  
+    bus-&gt;dev.class = &amp;mdio_bus_class;    //&#x603B;&#x7EBF;&#x8BBE;&#x5907;&#x7C7B;&quot;/sys/bus/mdio_bus&quot;  
+    bus-&gt;dev.groups = NULL;  
+    dev_set_name(&amp;bus-&gt;dev, &quot;%s&quot;, bus-&gt;id);   //&#x8BBE;&#x7F6E;&#x603B;&#x7EBF;&#x8BBE;&#x5907;&#x540D;  
+    err = device_register(&amp;bus-&gt;dev);    //&#x6CE8;&#x518C;&#x8BBE;&#x5907;&#x6587;&#x4EF6;  
+    if (err) {  
+        printk(KERN_ERR &quot;mii_bus %s failed to register\n&quot;, bus-&gt;id);  
+        return -EINVAL;  
+    }  
+    mutex_init(&amp;bus-&gt;mdio_lock);  
+    if (bus-&gt;reset)  
+        bus-&gt;reset(bus); //&#x603B;&#x7EBF;&#x590D;&#x4F4D;  
+    for (i = 0; i &lt; PHY_MAX_ADDR; i++) {  
+        if ((bus-&gt;phy_mask &amp; (1 &lt;&lt; i)) == 0) {  
+            struct phy_device *phydev;  
+            phydev = mdiobus_scan(bus, i);  //&#x626B;&#x63CF;phy&#x8BBE;&#x5907;  
+            if (IS_ERR(phydev)) {  
+                err = PTR_ERR(phydev);  
+                goto error;  
+            }  
+        }  
+    }  
+    bus-&gt;state = MDIOBUS_REGISTERED; //&#x72B6;&#x6001;&#x8BBE;&#x7F6E;&#x4E3A;&#x5DF2;&#x6CE8;&#x518C;  
+    pr_info(&quot;%s: probed\n&quot;, bus-&gt;name);  
+    return 0;  
+error:  
+    while (--i &gt;= 0) {  
+        if (bus-&gt;phy_map[i])  
+            device_unregister(&amp;bus-&gt;phy_map[i]-&gt;dev);  
+    }  
+    device_del(&amp;bus-&gt;dev);  
+    return err;  
+}  
+EXPORT_SYMBOL(mdiobus_register);
+</code></pre><h5 id="&#x8C03;&#x7528;&#x4E86;mdiobusscan&#x51FD;&#x6570;">&#x8C03;&#x7528;&#x4E86;mdiobus_scan&#x51FD;&#x6570;</h5>
+<pre><code>struct phy_device *mdiobus_scan(struct mii_bus *bus, int addr)  
+{  
+    struct phy_device *phydev;  
+    int err;  
+    phydev = get_phy_device(bus, addr); //&#x83B7;&#x53D6;&#x521B;&#x5EFA;phy&#x8BBE;&#x5907;  
+    if (IS_ERR(phydev) || phydev == NULL)  
+        return phydev;  
+    err = phy_device_register(phydev);  //&#x6CE8;&#x518C;phy&#x8BBE;&#x5907;  
+    if (err) {  
+        phy_device_free(phydev);  
+        return NULL;  
+    }  
+    return phydev;  
+}  
+EXPORT_SYMBOL(mdiobus_scan);
+</code></pre><h5 id="&#x52A8;&#x6001;&#x5730;&#x521B;&#x5EFA;&#x4E86;phy&#x8BBE;&#x5907;">&#x52A8;&#x6001;&#x5730;&#x521B;&#x5EFA;&#x4E86;PHY&#x8BBE;&#x5907;</h5>
+<h1 id="&#x56DB;mii&#x3001;mdio&#x3001;phy&#x3001;mac&#x5173;&#x7CFB;&#x56FE;">&#x56DB;.mii&#x3001;mdio&#x3001;phy&#x3001;mac&#x5173;&#x7CFB;&#x56FE;</h1>
+<p><img src="https://img-blog.csdn.net/20130719105509343?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvcGFvbWFkaQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="avatar"></p>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="./" class="navigation navigation-prev " aria-label="Previous page: 网络设备之PHY">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="../end/" class="navigation navigation-next " aria-label="Next page: over">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"网络设备之MDIO总线","level":"1.3","depth":1,"next":{"title":"over","level":"1.4","depth":1,"path":"end/README.md","ref":"end/README.md","articles":[]},"previous":{"title":"网络设备之PHY","level":"1.2","depth":1,"path":"chapter1/README.md","ref":"chapter1/README.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"chapter1/section1.md","mtime":"2020-04-03T10:32:18.021Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-04-03T10:33:29.384Z"},"basePath":"..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+
